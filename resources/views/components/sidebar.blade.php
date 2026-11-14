@@ -45,10 +45,15 @@
     </a>
 
     <!-- Logout -->
-    <a href="/logout"
-        class="group flex items-center gap-2 p-2 h-16 font-semibold hover:bg-red-500 hover:text-white mt-auto">
-        <x-gmdi-logout class="w-7 h-7 text-red-600 group-hover:text-white" />
+
+    <form action="{{ route('logout') }}" method="POST"  
+    class="group flex items-center gap-2 p-2 h-16 font-semibold hover:bg-red-500 hover:text-white mt-auto">
+    @csrf
+
+    <x-gmdi-logout class="w-7 h-7 text-red-600 group-hover:text-white" />
+    <button type="submit">
         Logout
-    </a>
+    </button>
+</form>
 
 </aside>

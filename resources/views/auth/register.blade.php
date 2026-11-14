@@ -14,7 +14,7 @@
         <div class="bg-white w-full sm:w-2/4 lg:w-1/4">
             <h1 class="text-center mt-10"><span class="text-blue-600 text-3xl font-bold">Help</span><span
                     class="text-3xl font-bold">Desk</span></h1>
-            <form action="{{ route('store') }}" method="POST"
+            <form action="{{ route('register.store') }}" method="POST"
                 class="h-8/9 lg:h-3/4 flex flex-col gap-5 justify-center items-center relative -mt-11 sm:-mt-7">
                 @csrf
 
@@ -76,7 +76,7 @@
                     class="bg-blue-400 w-30 h-14 rounded-2xl shadow text-white font-semibold mt-4 hover:bg-blue-500">Register</button>
             </form>
             <div class="w-full h-10 text-center">
-                <p>Already have an account? <a href=""
+                <p>Already have an account? <a href="{{ route('login') }}"
                         class="font-semibold text-blue-700 hover:text-blue-900 hover:font-bold hover:underline">Log
                         In</a></p>
             </div>

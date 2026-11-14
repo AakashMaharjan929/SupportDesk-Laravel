@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Login</title>
 </head>
 
 <body>
@@ -14,7 +14,8 @@
         <div class="bg-white w-full sm:w-2/4 lg:w-1/4">
             <h1 class="text-center mt-10"><span class="text-blue-600 text-3xl font-bold">Help</span><span
                     class="text-3xl font-bold">Desk</span></h1>
-            <form action="{{ route('store') }}" method="POST"
+
+            <form action="{{ route('login.store') }}" method="POST"
                 class="h-8/9 lg:h-3/4 flex flex-col gap-5 justify-center items-center relative -mt-11 sm:-mt-7">
                 @csrf
 
@@ -28,54 +29,57 @@
                     </div>
                     @endif -->
 
-                <h1 class="font-bold text-2xl">Registration Form</h1>
-                <label for="name" class="hidden">Name</label>
-
-                <input type="text" name="name" placeholder="Username"
-                    class="w-3/4 border-b-2 border-black-200 shadow p-4 focus:outline-gray-700">
-
-                @error('name')
-                    <p class="text-red-500 text-sm w-3/4 -mt-6">
-                        {{ $message }}
-                    </p>
-                @enderror
+                <h1 class="font-bold text-2xl">Login Form</h1>
 
                 <label for="email" class="hidden">Email</label>
 
-                <input type="email" name="email" placeholder="Email"
+                <input type="email" name="email"
+                     value="{{ old('email') }}"
+                      placeholder="Email"
                     class="w-3/4 border-b-2 border-black-200 shadow p-4 focus:outline-gray-700">
 
                 @error('email')
-                    <p class="text-red-500 text-sm w-3/4 -mt-6">
-                        {{ $message }}
-                    </p>
+                <p class="text-red-500 text-sm w-3/4 -mt-6">
+                    {{ $message }}
+                </p>
                 @enderror
 
                 <label for="password" class="hidden">Password</label>
 
-                <input type="password" name="password" id="password" placeholder="password"
+                <input type="password" name="password" 
+                id="password" placeholder="password"
                     class="w-3/4 border-b-2 border-black-200 shadow p-4 focus:outline-gray-700">
                 <button id="passwordButton" type="button" class="text-black w-7 h-7 absolute right-14 top-75 lg:top-62">
                     <x-gmdi-visibility />
                 </button>
 
                 @error('password')
-                    <p class="text-red-500 text-sm w-3/4 -mt-6">
-                        {{ $message }}
-                    </p>
+                <p class="text-red-500 text-sm w-3/4 -mt-6">
+                    {{ $message }}
+                </p>
                 @enderror
 
-                <input type="password" name="password_confirmation" id="confirm_password" placeholder="confirm password"
-                    class="w-3/4 border-b-2 border-black-200 shadow p-4 focus:outline-gray-700"><button type="button"
-                    onclick="toggleButton('confirm_password')"
-                    class="text-black w-7 h-7 absolute right-14 top-100 lg:top-84"><x-gmdi-visibility /></button>
+                <div class="w-3/4 flex items-center justify-end align-middle gap-2">
+                    <input type="checkbox" name="remember" id="remember" value="1"
+                        class="w-4 h-4 accent-blue-500 cursor-pointer">
+
+                    <label for="remember" class="text-sm text-gray-700 cursor-pointer">
+                        Remember Me
+                    </label>
+                </div>
+
                 <button type="submit"
-                    class="bg-blue-400 w-30 h-14 rounded-2xl shadow text-white font-semibold mt-4 hover:bg-blue-500">Register</button>
+                    class="bg-blue-400 w-30 h-14 rounded-2xl shadow text-white font-semibold mt-4 hover:bg-blue-500">
+                    Log in
+                </button>
+
             </form>
             <div class="w-full h-10 text-center">
-                <p>Already have an account? <a href=""
-                        class="font-semibold text-blue-700 hover:text-blue-900 hover:font-bold hover:underline">Log
-                        In</a></p>
+                <p>Don't have an account? <a href="{{ route('register') }}"
+                        class="font-semibold text-blue-700 hover:text-blue-900 hover:font-bold hover:underline">
+                        Register
+                    </a>
+                </p>
             </div>
         </div>
     </main>
