@@ -24,8 +24,8 @@
         <div class="flex flex-row gap-2 items-center">
             <img src="" alt="" class="h-9 w-9 border border-gray-700 rounded-4xl">
             <div>
-                <p class="text-[15px] font-semibold text-black">Name</p>
-                <p class="text-[12px] font-semibold text-gray-400">Role</p>
+                <p class="text-[15px] font-semibold text-black">{{ auth()->user()->name }}</p>
+                <p class="text-[12px] font-semibold text-gray-400">{{ auth()->user()->role }}</p>
             </div>
         </div>
     </div>
