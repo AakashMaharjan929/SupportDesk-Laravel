@@ -14,6 +14,17 @@
         <div class="bg-white w-full sm:w-2/4 lg:w-1/4">
             <h1 class="text-center mt-10"><span class="text-blue-600 text-3xl font-bold">Help</span><span
                     class="text-3xl font-bold">Desk</span></h1>
+            @if (session('status'))
+            <div class="text-green-500">
+                {{ session('status') }}
+            </div>
+            @endif
+
+            @if ($errors->any())
+                @foreach ($errors->all() as $error)
+                    <p class="text-red-600">{{ $error }}</p>
+                @endforeach
+            @endif
 
             <form action="{{ route('login.store') }}" method="POST"
                 class="h-8/9 lg:h-3/4 flex flex-col gap-5 justify-center items-center relative -mt-11 sm:-mt-7">
@@ -33,9 +44,7 @@
 
                 <label for="email" class="hidden">Email</label>
 
-                <input type="email" name="email"
-                     value="{{ old('email') }}"
-                      placeholder="Email"
+                <input type="email" name="email" value="{{ old('email') }}" placeholder="Email"
                     class="w-3/4 border-b-2 border-black-200 shadow p-4 focus:outline-gray-700">
 
                 @error('email')
@@ -46,8 +55,7 @@
 
                 <label for="password" class="hidden">Password</label>
 
-                <input type="password" name="password" 
-                id="password" placeholder="password"
+                <input type="password" name="password" id="password" placeholder="password"
                     class="w-3/4 border-b-2 border-black-200 shadow p-4 focus:outline-gray-700">
                 <button id="passwordButton" type="button" class="text-black w-7 h-7 absolute right-14 top-75 lg:top-62">
                     <x-gmdi-visibility />
@@ -59,13 +67,21 @@
                 </p>
                 @enderror
 
-                <div class="w-3/4 flex items-center justify-end align-middle gap-2">
-                    <input type="checkbox" name="remember" id="remember" value="1"
-                        class="w-4 h-4 accent-blue-500 cursor-pointer">
+                <div class="w-3/4 flex items-center justify-between align-middle gap-2">
+                    <div class="text-sm text-gray-400 hover:text-black hover:underline">
+                        <a href="{{ route('password.request') }}">
+                            Forgot Password?
+                        </a>
+                    </div>
 
-                    <label for="remember" class="text-sm text-gray-700 cursor-pointer">
-                        Remember Me
-                    </label>
+                    <div class="flex items-center justify-between align-middle gap-2">
+                        <input type="checkbox" name="remember" id="remember" value="1"
+                            class="w-4 h-4 accent-blue-500 cursor-pointer">
+
+                        <label for="remember" class="text-sm text-gray-700 cursor-pointer">
+                            Remember Me
+                        </label>
+                    </div>
                 </div>
 
                 <button type="submit"

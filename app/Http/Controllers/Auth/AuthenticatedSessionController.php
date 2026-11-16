@@ -38,6 +38,8 @@ class AuthenticatedSessionController extends Controller
             'password' => 'required|string',
         ]);
 
+        // Check user is_active status
+
         $user = User::where('email', $credentials['email'])->first();
 
         if($user && ! $user->is_active){
