@@ -3,22 +3,62 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisteredUserController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TicketController;
+
+use App\Http\Controllers\CustomerDashboardController;
+use App\Http\Controllers\AgentDashboardController;
+use App\Http\Controllers\AdminDashboardController;
+
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Auth;
 
+//Customer routes
+Route::middleware(['auth', 'verified', 'role:customer'])
+    ->prefix('customer')
+    ->name('customer.')
+    ->group(function () {
+
+        Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('dashboard');
+
+        Route::get('/tickets', [TicketController::class, 'index']);
+
+        Route::post('/tickets/create', [TicketController::class, 'create']);
+    });
+
+//Agent routes
+Route::middleware(['auth', 'verified', 'role:agent'])
+    ->prefix('agent')
+    ->name('agent.')
+    ->group(function () {
+
+        Route::get('/dashboard', [AgentDashboardController::class, 'index'])->name('dashboard');
+
+        Route::get('/tickets', [TicketController::class, 'index']);
+
+        Route::post('/tickets/create', [TicketController::class, 'create']);
+    });
+
+//Admin routes
+Route::middleware(['auth', 'verified', 'role:admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+
+        Route::get('/', function () {
+            return redirect()->route('admin.dashboard');
+        });
+
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])
+            ->name('dashboard');
+    });
+
+// Authenticated users
 Route::middleware('auth')->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->middleware('verified');
 
-    Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('verified')
-        ->name('dashboard');
-
-    Route::get('/tickets', [TicketController::class, 'index']);
-    Route::post('/tickets/create', [TicketController::class, 'create']);
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 
@@ -31,7 +71,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
         $request->fulfill();
 
-        return redirect()->route('dashboard');
+        $user = $request->user();
+
+        return match ($user->role) {
+            'admin' => redirect()->route('admin.dashboard'),
+            'agent' => redirect()->route('agent.dashboard'),
+            default => redirect()->route('customer.dashboard'),
+        };
     })->middleware('signed')->name('verification.verify');
 
     // Resend verification email
@@ -69,4 +115,18 @@ Route::middleware('guest')->group(function () {
 
     Route::post('/reset-password', [PasswordResetController::class, 'update'])
         ->name('password.update');
+});
+
+// Common entry point route
+Route::middleware(['auth', 'verified'])->get('/', function () {
+
+    $role = Auth::user()->role;
+
+    return match ($role) {
+        'admin' => redirect()->route('admin.dashboard'),
+        'agent' => redirect()->route('agent.dashboard'),
+        'customer' => redirect()->route('customer.dashboard'),
+        default => abort(403),
+    };
+
 });

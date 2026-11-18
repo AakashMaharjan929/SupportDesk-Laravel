@@ -42,7 +42,7 @@ class AuthenticatedSessionController extends Controller
 
         $user = User::where('email', $credentials['email'])->first();
 
-        if($user && ! $user->is_active){
+        if ($user && ! $user->is_active) {
             return back()->withErrors([
                 'email' => 'Your account has been deactivated.'
             ])->onlyInput('email');
@@ -59,12 +59,23 @@ class AuthenticatedSessionController extends Controller
 
             $request->session()->regenerate();
 
-            return redirect()->intended(route('dashboard'));
+            // Redirect based on role
+            $role = Auth::user()->role;
+
+            if ($role === 'admin') {
+                return redirect()->intended(route('admin.dashboard'));
+            }
+
+            if ($role === 'agent') {
+                return redirect()->intended(route('agent.dashboard'));
+            }
+
+            return redirect()->intended(route('customer.dashboard'));
         }
 
-            RateLimiter::hit($key, 60);
+        RateLimiter::hit($key, 60);
 
-        $remaining = RateLimiter::remaining($key,5);
+        $remaining = RateLimiter::remaining($key, 5);
 
         return back()->withErrors([
             'email' => "The provided credentials do not match our records. Remaining attempts: {$remaining}",
